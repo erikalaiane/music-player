@@ -8,7 +8,7 @@
 
 **Interface moderna de music player com design inspirado em plataformas de streaming 🎧**
 
-Aplicação web completa com player funcional e gerenciamento de playlists
+Aplicação web com interface visual de player e gerenciamento de playlists
 
 </div>
 
