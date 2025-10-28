@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Mail, Bell, Home, Heart, Music, Disc, Tag, Play, Pause, SkipBack, SkipForward, Shuffle, Share2 } from 'lucide-react';
 
 function App() {
@@ -6,31 +6,52 @@ function App() {
   const [currentTime, setCurrentTime] = useState(94);
   const totalTime = 215;
 
+  // Avança o tempo automaticamente quando está tocando
+  useEffect(() => {
+    if (isPlaying && currentTime < totalTime) {
+      const timer = setInterval(() => {
+        setCurrentTime(prev => {
+          if (prev >= totalTime) {
+            setIsPlaying(false);
+            return totalTime;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+  }, [isPlaying, currentTime, totalTime]);
+
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const categories = ['Classic', '90s', 'New', 'Instrumental', 'Modern pl...'];
+  const categories = ['Kpop', 'Hip Hop', 'Pop', 'Rock', 'Indie...'];
   
   const playlists = [
-    { title: 'Daily Chaos', author: 'by Emily Bryan', image: '/images/img1.jpg' },
-    { title: 'Simple Things', author: 'by Ryan Poppin', image: '/images/img2.jpg' },
-    { title: 'Not so go...', author: 'by Bryan Thoma...', image: '/images/img3.jpg' }
+    { title: 'Kpop Favs', author: 'by Érika', image: 'public/images/img1.jpg' },
+    { title: 'For Drive', author: 'by Érika', image: 'public/images/img2.jpg' },
+    { title: 'Futuristics', author: 'by Érika', image: 'public/images/img3.jpg' }
   ];
 
   const favoritePlaylists = [
-    { title: 'Best of Eren', songs: '32 songs in this list' },
-    { title: 'Best of Eren', songs: '32 songs in this list' }
+    { title: 'Moment', songs: '32 songs in this list', image: 'public/images/img4.jpg'},
+    { title: 'code playlist', songs: '28 songs in this list', image: 'public/images/img5.jpg'}
   ];
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-8">
+    <div 
+      className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/images/background.jpg')" }}
+    >
+      
       <div className="w-full max-w-7xl bg-gray-200 rounded-3xl p-8 shadow-2xl">
         {/* Header */}
         <header className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">MUSIC2D</h1>
+          <h1 className="text-3xl font-bold tracking-tight">MUSIC PLAYER</h1>
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
@@ -71,7 +92,7 @@ function App() {
             <div className="relative w-full aspect-square bg-gradient-to-br from-gray-300 to-gray-400 rounded-3xl shadow-inner mb-6 flex items-center justify-center overflow-hidden">
               {/* Turntable Image */}
               <img 
-                src="/images/disco.png" 
+                src="/images/capa.jpg" 
                 alt="Vinyl Record" 
                 className="w-full h-full object-cover rounded-3xl"
               />
@@ -80,8 +101,8 @@ function App() {
             {/* Song Info */}
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-3xl font-bold mb-2">The Suffering</h2>
-                <span className="inline-block px-4 py-1 bg-black text-white text-sm rounded-full">Classic</span>
+                <h2 className="text-3xl font-bold mb-2">BOUNCE BACK</h2>
+                <span className="inline-block px-4 py-1 bg-black text-white text-sm rounded-full">Kpop</span>
               </div>
               <div className="flex items-center gap-2 text-xl">
                 <span className="text-2xl">💬</span>
@@ -176,8 +197,12 @@ function App() {
                 {favoritePlaylists.map((playlist, i) => (
                   <div key={i} className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition-shadow">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-gray-800 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl">👤</span>
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-300">
+                        <img 
+                          src={playlist.image} 
+                          alt={playlist.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <div>
                         <h3 className="font-bold text-lg">{playlist.title}</h3>
@@ -198,4 +223,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
